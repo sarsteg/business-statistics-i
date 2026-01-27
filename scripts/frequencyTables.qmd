@@ -1,0 +1,50 @@
+---
+title: "frequencyTables"
+format: 
+  html: 
+    self-contained: true
+  pdf: 
+    number-sections: true 
+    toc: true            
+    pdf-engine: xelatex 
+editor: visual
+---
+
+# Frequency Tables
+
+## Setup
+
+#### Load libraries
+
+```{r}
+library(tidyverse)
+library(descr)
+library(janitor)
+```
+
+#### data
+
+```{r}
+# mtcars
+data(mtcars)
+```
+
+#### variables
+
+```{r}
+names(mtcars)
+```
+
+## Frequencies
+
+```{r}
+tabyl(mtcars, cyl)
+```
+
+```{r}
+freq(as.ordered(mtcars$cyl), plot = FALSE)
+```
+
+```{r}
+cars_table <- freq(as.ordered(mtcars$cyl), plot = FALSE)
+```

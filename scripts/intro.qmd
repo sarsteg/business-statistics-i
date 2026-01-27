@@ -1,0 +1,195 @@
+---
+title: "intro"
+format: 
+  html: 
+    self-contained: true
+  pdf: 
+    number-sections: true 
+    toc: true            
+    pdf-engine: xelatex 
+editor: visual
+---
+
+# Introduction
+
+## Comments
+
+```{r}
+# This is a comment
+```
+
+## R as a calculator
+
+Simple:
+
+```{r}
+10 + 20
+```
+
+Order of operations, two examples:
+
+```{r}
+1 + 2 * 4
+(1 + 2) * 4
+```
+
+## Variables
+
+For beginners: use only `<-`. Drop `->` entirely.
+
+```{r}
+sales <- 350
+royalty <- 7
+revenue <- sales * royalty
+revenue
+```
+
+Updating a variable is good and should stay:
+
+```{r}
+revenue <- revenue + 550
+revenue
+```
+
+If you are using the console, you can list objects with `objects()` (the document also highlights using RStudio’s Environment panel as an easy option).
+
+```{r}
+objects()
+```
+
+The document’s core warning: once you remove variables, there’s no undo unless you saved them.
+
+```{r}
+rm(revenue, royalty)
+```
+
+### Functions
+
+Remove extra spacing inside parentheses. Beginners copy patterns.
+
+```{r}
+sqrt(225) 
+abs(-13) 
+round(3.14159, 2)
+```
+
+Named arguments are useful later, but early on it is more typing than learning. If you want to mention them, show one example and move on:
+
+```{r}
+round(x = 3.14159, digits = 2)
+```
+
+### Characters
+
+```{r}
+greeting <- "hello"
+greeting
+greeting[1]
+nchar(greeting)
+```
+
+### Logical Values
+
+Strongly recommend you avoid teaching `T` and `F`. They are changeable. Stick to `TRUE` and `FALSE`.
+
+```{r}
+2 + 2 == 4
+2 + 2 == 5
+```
+
+### NaN (Not a number)
+
+A common way to produce `NaN` is 0 divided by 0.
+
+```{r}
+0 / 0
+```
+
+### NA (missing)
+
+`NA` indicates missing information (very common with real datasets). The document contrasts NA with NaN: NaN is an undefined math result, while NA is missing information.
+
+```{r}
+Q <- c(1, NA, 3)
+Q
+```
+
+### NULL (no value)
+
+`NULL` means “no value at all,” which the document treats as a stronger absence than NA.
+
+```{r}
+z <- NULL
+z
+```
+
+### Vectors
+
+One type only (all numeric, or all characters, or all logical, etc.)
+
+```{r}
+months <- month.name
+months
+```
+
+```{r}
+v1 <- c(1, 2, 3)              # numeric vector
+v2 <- c("a", "b", "c")        # character vector
+v3 <- c(TRUE, FALSE, TRUE)    # logical vector
+```
+
+### List
+
+Can mix types.
+
+```{r}
+example_list <- list(
+  name = "Ana",
+  scores = c(80, 90, 85),
+  passed = TRUE
+)
+```
+
+### Factors
+
+Numeric codes for nominal groups can lead to nonsense math (like inventing groups that do not exist), so convert to a factor.
+
+```{r}
+group <- c(1,1,1,2,2,2,3,3,3)
+group + 2   # misleading outcome for nominal data (demonstration)
+```
+
+Convert to factor:
+
+```{r}
+group <- as.factor(group)
+class(group)
+```
+
+This is the exact workflow shown.
+
+Then try the “bad math” again:
+
+```{r}
+group + 2
+```
+
+### Label factor levels
+
+Assign meaningful labels with `levels(...) <- ...`.
+
+```{r}
+levels(group) <- c("group 1", "group 2", "group 3")
+group
+
+```
+
+Example for gender coding:
+
+```{r}
+gender <- as.factor(c(1,1,1,1,1,2,2,2,2))
+levels(gender) <- c("male", "female")
+gender
+```
+
+Acknowledgement: [learningstatisticswithr](https://learningstatisticswithr.com/book/introR.html)

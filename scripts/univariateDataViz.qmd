@@ -1,0 +1,71 @@
+---
+title: "Univariate Data Visualization"
+format: 
+  html: 
+    self-contained: true
+    toc: true             
+  pdf: 
+    number-sections: true 
+    toc: true            
+    pdf-engine: xelatex 
+editor: visual
+---
+
+## Univariate Data Visualizations
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(papaja)
+```
+
+```{r}
+# data(mtcars)
+df <- mtcars
+names(df)
+```
+
+### Figure 1 Bar Graph
+
+```{r}
+# univariate graph (categorical variable)
+df %>% 
+  ggplot(aes(x=gear))+
+  geom_bar()+
+  ggtitle("Gears")
+```
+
+```{r}
+# univariate graph (categorical variable)
+df %>% 
+  ggplot(aes(x=gear)) +
+  geom_bar() +
+  ggtitle("Number of Forward Gears") +
+  xlab("Gears") +
+  ylab("Frequency") +
+  theme_apa() # from papaja package
+```
+
+### Figure 2 Histogram
+
+```{r}
+names(mtcars)
+```
+
+```{r}
+# univariate graph (categorical variable)
+df %>% 
+  ggplot(aes(x=mpg)) +
+  geom_histogram() +
+  ggtitle("Miles per Gallon (MPG)")
+```
+
+```{r}
+# univariate graph (categorical variable)
+df %>% 
+  filter(!is.na(mpg)) %>% 
+  ggplot(aes(x=mpg)) +
+  geom_histogram(binwidth = 5, fill = "lightblue", color = "black") +
+  ggtitle("Miles per Gallon (MPG)") +
+  theme_apa()
+```

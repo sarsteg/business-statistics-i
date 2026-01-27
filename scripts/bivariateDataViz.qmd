@@ -1,0 +1,79 @@
+---
+format: 
+  html: 
+    self-contained: true
+    toc: true             
+  pdf: 
+    number-sections: true 
+    toc: true            
+    pdf-engine: xelatex 
+editor: visual
+---
+
+## Bivariate Data Visualizations
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(papaja)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+source("loadFilteredData.R")
+```
+
+### Figure 1 Scatterplot
+
+```{r}
+#| message: false
+#| warning: false
+ggplot(data=df) +
+  geom_point(aes(x=IUS_Total, 
+                 y=STARS_Total)) +
+  geom_smooth(aes(x=IUS_Total, 
+                  y=STARS_Total), 
+                  method="lm") +
+  ggtitle("IUS x STARS") +
+  xlab("IUS") +
+  ylab("STARS") +
+  theme_apa()
+```
+
+My independent variable is intolerance for uncertainty (IUS_Total), and my dependent variable is statistics anxiety (STARS_Total).
+
+In the figure above, there is a positive relationship between a statistics anxiety and intolerance for uncertainty. As intolerance for uncertainty increases, statistics anxiety tends to also increase.
+
+### Figure 2 Scatterplot
+
+```{r}
+#| message: false
+#| warning: false
+ggplot(data=df) +
+  geom_point(aes(x=IUS_Total, 
+                 y=STARS_Total,
+                 color=ATMS_Persistence_Total)) +
+  geom_smooth(aes(x=IUS_Total, 
+                  y=STARS_Total), 
+                  method="lm") +
+  ggtitle("IUS x STARS") +
+  xlab("IUS") +
+  ylab("STARS") +
+  theme_apa()
+```
+
+I am adding persistence (ATMS_Persistence_Total) as my third variable. The colors seem widely spread throughout the graph with no obvious pattern.
+
+### Extra example with facet wrap
+
+```{r}
+# univariate graph (categorical variable)
+df %>% 
+  filter(!is.na(gender)) %>% 
+  ggplot(aes(x=age))+
+  geom_bar()+
+  ggtitle("Age of Participants") +
+  facet_wrap(~gender)
+```
