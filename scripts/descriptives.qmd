@@ -1,8 +1,9 @@
 ---
-title: "Working with Data"
+title: "descriptives"
 format: 
   html: 
     self-contained: true
+    toc: true             
   pdf: 
     number-sections: true 
     toc: true            
@@ -10,244 +11,133 @@ format:
 editor: visual
 ---
 
-# Introduction
-
-**Goals:**
-
--   Begin exploratory data analysis and become more familiar with the dataset.
-
-Dataset: \[Name of the Data that you are using\]
-
-Source: \[Briefy describe the source of your data\]
-
-Variables of Interest:
-
--   'Var1': \[Variable description\]
-
--   'Var2': \[Variable description\]
-
-## Folder organization
-
-Save your data file in **two** folder locations:
-
--   /data/raw
-
--   renamed file "data" in /data folder
-
-For example, if data was called "survey1990-1992.csv", I would upload the file to the /data/raw folder as is. Then, in the 'File' tab, I could select the file and click 'Copy To...' in the 'More' settings. Navigate to the /data folder, and rename the file to be "data.csv". Keep your file type (e.g., .csv) in the name.
-
-## File setup
-
-### Install the required packages.
-
-```{r install.packages}
-# install.packages("tidyverse")
-# install.packages("descr")
-# install.packages("knitr")
-# install.packages("dplyr")
-```
-
-### Load the required packages.
-
-```{r load-packages}
+```{r}
 #| include: false
-library(tidyverse)  # For data manipulation and tibbles
-library(descr) # For frequency tables
-library(knitr) # For combining information, like tables with headers
-library(dplyr) # For additional functions
-library(lsr)
 library(psych)
 ```
 
-```{r}
-# Packages for SAS, SPSS, and Stata
-library(haven)
-library(labelled)
-```
+# Descriptive Statistics
 
-### Settings for R chunks
+| [P]{.underline}opulation | [S]{.underline}ample     |
+|--------------------------|--------------------------|
+| [P]{.underline}arameters | [S]{.underline}tatistics |
 
-```{r suppressing-messages}
-suppressPackageStartupMessages(library(tidyverse))
-```
+## Location / Central Tendency
 
-*Hide messages with\
-#\| echo: false\
-or use the suppress function above.*
+### Mode
 
-### Load data file into path and read csv file.
+*The most frequent; used for categorical data*
 
-```{r load-data}
-# Define the file path (going up one level from /scripts to the main directory)
-file_path <- file.path("..", "data", "data.csv")
-
-# Load the CSV file into a dataframe (automatically a tibble)
-df <- read_csv(file_path)
-
-# View the first few rows
-head(df)
-
-```
+No Mode = same frequency
 
 ```{r}
-# SPSS files can make a codebook from their file
-# codebook <- look_for(df)
+
 ```
 
-## View data
-
-Check the data after it has been loaded.
-
-### Check the column names.
+Bimodal = two modes
 
 ```{r}
-names(df)
-```
-
-```{r colnames}
-# Check column names
-colnames(df)
 
 ```
 
-### View summary statistics
+Multimodal = \>2 modes
 
 ```{r}
-summary(df)
+
 ```
+
+### Median
+
+*Middle value of ordered data; robust against outliers*
 
 ```{r}
-#| message: false
-#| warning: false
-# Useful for interval or ratio scale variables
-# Think carefully about what the numbers *actually* mean for your variables
-psych::describe(df)
+
 ```
+
+### Arithmetic Mean
+
+![](images/clipboard-3763690992.png){width="289"}
 
 ```{r}
-psych::describeBy(df$age, group = df$gender)
+
 ```
 
-### Check the variable types.
+### Weighted Mean
 
-```{r glimpse}
-# Check data structure
-glimpse(df)
+![](images/clipboard-2725369077.png)
+
+```{r}
+
 ```
 
-## Create Frequency Tables
+### Trimmed Mean
 
-Use descr package to create frequency tables.
+*Discards a percentage of extreme values from both ends and calculates the mean*
 
-### Country
+```{r}
 
-```{r freq-country}
-# Frequency table for country where data was collected
-freq(as.ordered(df$country), plot = FALSE)
 ```
 
-**Interpretation:** While I am from the US, the sample size from the US is small. I will likely use country as an additional variable or limit the analyses to certain countries (TBD based on additional exploration).
+### 
 
-### Language
+## Skew
 
-```{r freq-language}
-# Frequency table for language spoken for participants
-freq(as.ordered(df$language), plot = FALSE)
-```
+#### Right skew or positively skewed
 
-**Interpretation:** There is a large sample of English speakers. I will focus my analyses on English speakers since English is my primary language. From my readings, I know that language can influence individuals processing of math. This limitation to English speakers will help focus my analysis and eliminate variation due to language.
+#### Left skew or negatively skewed
 
-### Degree Major
-
-```{r freq-degree-major}
-# Frequency table for country where data was collected
-freq(as.ordered(df$degree_major), plot = FALSE)
-```
-
-**Interpretation:** Most of participants were psychology majors. I would like to focus my analyses on psychology majors since this is a Statistics class for psychology majors.
+### Moving Average
 
 ------------------------------------------------------------------------
 
-## Extra Additional Table
+## Dispersion
 
-Choosing one additional variable to format differently.
+### Range
 
-```{r}
-# Create the data for the table
-genderTable <- as.data.frame(freq(as.ordered(df$gender), plot = FALSE))
-
-genderTable
-```
+*The difference between the largest and smallest data values*
 
 ```{r}
-# Create columns for new table
-colnames(genderTable)
-```
-
-## Variable divided into multiple variables
-
-### Multiple sections? or one selection?
-
-```{r}
-# Create a list of the software columns
-softwareColumns <- c(
-  "software_excel",
-  "software_jamovi",
-  "software_jasp",
-  "software_r",
-  "software_sas",
-  "software_spss_amos",
-  "software_spss_stats",
-  "software_none",
-  "software_other"
-  )
-  
-# Create column for # of NAs 
-df$softwareNAs <- rowSums(!is.na(df[softwareColumns]))
-
-# Check if if the number of NAs is consistent
-freq(as.ordered(df$softwareNAs), plot = FALSE)
-```
-
-There appears to be multiple selections allowed. Instead, I can focus on if statistical software was taught.
-
-```{r}
-# Check if the topic of software was taught
-freq(as.ordered(df$topic_software), plot = FALSE)
-```
-
-### Another option: coalesce()
-
-```{r}
-# Check how the variables are organized
-freq(as.ordered(df$software_excel), plot = FALSE)
-```
-
-The coalesce() function from the dplyr package is the most elegant and efficient way to handle this, if I would be only looking for the first non-missing value from a set of vectors.
-
-```{r}
-# Create a new variable that will hold the non-NA values
-df$software <- coalesce(
-  df$software_excel,
-  df$software_jamovi,
-  df$software_jasp,
-  df$software_r,
-  df$software_sas,
-  df$software_spss_amos,
-  df$software_spss_stats,
-  df$software_none,
-  df$software_other,
-  )
-
-# NA is not meaningful in the case, so NAs will be dropped
 
 ```
 
+### Variability
+
+The amount of individual observation or set of observations fluctuates about the mean or center of set of data
+
+Deviation = distance that a value is from the mean
+
+#### Sample Variance
+
+![](images/clipboard-3891105620.png)
+
+### Mean Absolute Deviation (MAD)
+
+![](images/clipboard-2110179451.png)
+
+### Standard Deviation
+
+The square root of the variance
+
+## Empirical Rule
+
+The variability of a set of measurements for a bell-shaped distribution
+
+68-95-99.7
+
+### Chebyshev's Theorem
+
+General rule that describes the variability of any set of data regardless of the shape of its distribution
+
+![](images/clipboard-3495769771.png)
+
+## Coefficient of Variation
+
+Compares the variation in data sets
+
+![](images/clipboard-296307634.png)
+
+## Additional Function
+
 ```{r}
-# Create a freq table for this new variable
-freq(as.ordered(df$software), plot = FALSE)
+psych::describe()
 ```
-
-*Number for excel matches frequency table above. Possible issues with selecting multiple options.*
-
-### 
