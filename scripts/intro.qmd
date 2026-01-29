@@ -23,7 +23,8 @@ editor: visual
 Simple:
 
 ```{r}
-10 + 20
+
+ 5        + 25
 ```
 
 Order of operations, two examples:
